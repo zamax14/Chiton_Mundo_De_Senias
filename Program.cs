@@ -15,9 +15,9 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             //Connection information
-            string user = "carlx137";
-            string pass = "nosoyroot";
-            string host = "143.198.73.255";
+            string user = "+++++++++++";
+            string pass = "root";
+            string host = "**********+";
 
             doPython();
             //Set up the SSH connection
