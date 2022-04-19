@@ -1,0 +1,26 @@
+<annotation>
+	<folder>abc</folder>
+	<filename>a.622f57c0-b6d7-11ec-a968-7085c257cce1.jpg</filename>
+	<path>D:\Escritorio\Lengua de Señas\RealTimeObjectDetection\Tensorflow\workspace\images\abc\a.622f57c0-b6d7-11ec-a968-7085c257cce1.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>480</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>a</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>216</xmin>
+			<ymin>254</ymin>
+			<xmax>406</xmax>
+			<ymax>367</ymax>
+		</bndbox>
+	</object>
+</annotation>
