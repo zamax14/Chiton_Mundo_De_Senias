@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Renci.SshNet;
-using Renci.SshNet.Common;
 using IronPython.Hosting;
-using Microsoft.Scripting.Hosting;
+using System.IO;
 
 namespace ConsoleApplication1
 {
@@ -15,39 +10,74 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             //Connection information
-            string user = "+++++++++++";
-            string pass = "root";
-            string host = "**********+";
+            string user = "wanda";
+            string pass = "wandaamormio";
+            string host = "143.198.73.255";
 
-            doPython();
-            //Set up the SSH connection
-            using (var client = new SshClient(host,9907, user, pass))
+            string pathRemote = "/home/dummy/ftp/files/test.txt";
+            string pathLocalFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "codigos_nucleares.txt");
+            //doPython();
+
+            //Se puede hacer sincronicamente o asincronicamente en otro hilo
+            using (SftpClient sftp = new SftpClient(host, 9907, user, pass))
             {
-
-                //Accept Host key
-                client.HostKeyReceived += delegate (object sender, HostKeyEventArgs e)
+                try
                 {
-                    e.CanTrust = true;
-                };
+                    sftp.Connect();
 
-                //Start the connection
-                client.Connect();
+                    Console.WriteLine("Downloading {0}", pathRemote);
 
-                var output = client.RunCommand("cd /etc ; ls").Result;
+                    using (Stream fileStream = File.OpenWrite(pathLocalFile))
+                    {
+                        sftp.DownloadFile(pathRemote, fileStream);
+                    }
 
-
-                client.Disconnect();
-                Console.WriteLine(output.ToString());
-                Console.ReadLine();
-
-                
+                    sftp.Disconnect();
+                }
+                catch (Exception er)
+                {
+                    Console.WriteLine("Se ha detectado una excepción " + er.ToString());
+                }
             }
+            //using (var client = new SshClient(host,9907, user, pass))
+            //{
+
+            //    //Accept Host key
+            //    client.HostKeyReceived += delegate (object sender, HostKeyEventArgs e)
+            //    {
+            //        e.CanTrust = true;
+            //    };
+
+            //    //Start the connection
+            //    client.Connect();
+
+            //    var output = client.RunCommand("cd /etc ; ls").Result;
+
+
+            //    client.Disconnect();
+            //    Console.WriteLine(output.ToString());
+            //    Console.ReadLine();
+
+
+            //}
         }
         private static void doPython()
         {
-            ScriptEngine engine = Python.CreateEngine();
-            engine.ExecuteFile(@"D:\juan-\Documents\Computacion\Proyecto\SSHtest\prueba.py");
+            var engine = Python.CreateEngine();
+            var scope = engine.CreateScope();
+            var ruta =
+                @"def hola(nombre):
+                    print (nombre)
+                    return True";
+            engine.Execute(ruta, scope);
+            var saludo = scope.GetVariable("hola");
+            var resultado = saludo("alex");
+            Console.WriteLine(resultado);
+            //ScriptEngine engine = Python.CreateEngine();
+            //engine.ExecuteFile(@"D:\juan-\Documents\Computacion\Proyecto\SSHtest\prueba.py");
         }
+        
+
     }
 
 }
